@@ -5,7 +5,7 @@ export default function Home() {
     <main className="min-h-screen w-screen p-4">
       <div>Haar Wavelet Decomposition Tool.</div>
       <div className="w-full">
-        <Canvas canvasHeight={512} canvasWidth={512} />
+        <Canvas />
       </div>
     </main>
   );

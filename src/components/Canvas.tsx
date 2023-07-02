@@ -1,21 +1,34 @@
 "use client";
+
 import { wavedec2flat } from "@/utils/Haar";
 import { abs, loge, scaleArray } from "@/utils/arrayOperations";
 import { getCanvasPixels } from "@/utils/getCanvasPixels";
 import { useRef, useEffect, useState } from "react";
 
-export const Canvas = ({
-  canvasWidth,
-  canvasHeight,
-}: {
-  canvasWidth: number;
-  canvasHeight: number;
-}) => {
+const CANVAS_WIDTH_WEB = 512;
+const CANVAS_HEIGHT_WEB = 512;
+const CANVAS_HEIGHT_MOBILE = 256;
+const CANVAS_WIDTH_MOBILE = 256;
+
+export const Canvas = ({}: {}) => {
   const [drawnPixels, setDrawnPixels] = useState<number[][]>([]);
   const [wavelet, setWavelet] = useState<"haar">("haar");
   const [mode, setMode] = useState<"zero" | "per">("per");
   const [level, setLevel] = useState<number>(1);
   const [clearedCanvas, setClearedCanvas] = useState<boolean>(false);
+  const [canvasWidth, setCanvasWidth] = useState<number>(CANVAS_WIDTH_WEB);
+  const [canvasHeight, setCanvasHeight] = useState<number>(CANVAS_HEIGHT_WEB);
+
+  useEffect(() => {
+    if (window.innerWidth < 600) {
+      setCanvasWidth(CANVAS_WIDTH_MOBILE);
+      setCanvasHeight(CANVAS_HEIGHT_MOBILE);
+    } else {
+      setCanvasWidth(CANVAS_WIDTH_WEB);
+      setCanvasHeight(CANVAS_HEIGHT_WEB);
+    }
+  }, []);
+
   const handleCallBack = ({ el }: { el: number[][] }) => {
     setDrawnPixels(el);
   };
