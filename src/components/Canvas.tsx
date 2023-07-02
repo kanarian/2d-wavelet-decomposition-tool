@@ -21,7 +21,7 @@ export const Canvas = ({
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 lg:flex-row flex-col">
       <CanvasDrawing
         onDraw={handleCallBack}
         canvasWidth={canvasWidth}
