@@ -180,6 +180,7 @@ const CanvasDrawing = ({
   const [lastY, setLastY] = useState<number>(0);
   const [strokeColor, setStrokeColor] = useState<string>("#FF0000");
   const [strokeLength, setStrokeLength] = useState<number>(5);
+  const [isFirstDrawing, setIsFirstDrawing] = useState<boolean>(true);
 
   useEffect(() => {
     const canvas = canvasRef?.current;
@@ -235,8 +236,13 @@ const CanvasDrawing = ({
       clientX = mouseEvent.clientX;
       clientY = mouseEvent.clientY;
     }
-    const x = clientX;
-    const y = clientY;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
 
     if (ctx) {
       ctx.lineJoin = "round";
@@ -244,17 +250,24 @@ const CanvasDrawing = ({
       ctx.strokeStyle = strokeColor;
       ctx.lineWidth = strokeLength;
 
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
-      ctx.stroke();
+      if (isFirstDrawing) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 0.01, y + 0.01); // Draw a small initial line segment
+        ctx.stroke();
+        setIsFirstDrawing(false);
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
 
       setLastX(x);
       setLastY(y);
-      if (canvasRef.current) {
-        const pixels = getCanvasPixels(canvasRef.current);
-        onDraw({ el: pixels });
-      }
+
+      const pixels = getCanvasPixels(canvasRef.current);
+      onDraw({ el: pixels });
     }
   };
 

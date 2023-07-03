@@ -2,7 +2,7 @@ import { Canvas } from "../components/Canvas";
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-screen p-4">
+    <main className="min-h-screen w-screen p-4 overflow-hidden">
       <div>Haar Wavelet Decomposition Tool.</div>
       <div className="w-full">
         <Canvas />
