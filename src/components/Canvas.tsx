@@ -162,7 +162,6 @@ const ShowTransformedCanvas = ({
     </div>
   );
 };
-
 const CanvasDrawing = ({
   onDraw,
   canvasHeight,
@@ -197,7 +196,16 @@ const CanvasDrawing = ({
       | React.MouseEvent<HTMLCanvasElement>
       | React.TouchEvent<HTMLCanvasElement>
   ) => {
-    const { clientX, clientY } = event.touches ? event.touches[0] : event;
+    let clientX, clientY;
+    if (event.nativeEvent instanceof TouchEvent) {
+      const touchEvent = event as React.TouchEvent<HTMLCanvasElement>;
+      clientX = touchEvent.touches[0].clientX;
+      clientY = touchEvent.touches[0].clientY;
+    } else {
+      const mouseEvent = event as React.MouseEvent<HTMLCanvasElement>;
+      clientX = mouseEvent.clientX;
+      clientY = mouseEvent.clientY;
+    }
     setIsDrawing(true);
     setLastX(clientX);
     setLastY(clientY);
@@ -217,7 +225,16 @@ const CanvasDrawing = ({
   ) => {
     if (!isDrawing) return;
 
-    const { clientX, clientY } = event.touches ? event.touches[0] : event;
+    let clientX, clientY;
+    if (event.nativeEvent instanceof TouchEvent) {
+      const touchEvent = event as React.TouchEvent<HTMLCanvasElement>;
+      clientX = touchEvent.touches[0].clientX;
+      clientY = touchEvent.touches[0].clientY;
+    } else {
+      const mouseEvent = event as React.MouseEvent<HTMLCanvasElement>;
+      clientX = mouseEvent.clientX;
+      clientY = mouseEvent.clientY;
+    }
     const x = clientX;
     const y = clientY;
 
@@ -290,5 +307,3 @@ const CanvasDrawing = ({
     </div>
   );
 };
-
-export default Canvas;
