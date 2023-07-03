@@ -192,10 +192,15 @@ const CanvasDrawing = ({
     }
   }, []);
 
-  const startDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const startDrawing = (
+    event:
+      | React.MouseEvent<HTMLCanvasElement>
+      | React.TouchEvent<HTMLCanvasElement>
+  ) => {
+    const { clientX, clientY } = event.touches ? event.touches[0] : event;
     setIsDrawing(true);
-    setLastX(event.nativeEvent.offsetX);
-    setLastY(event.nativeEvent.offsetY);
+    setLastX(clientX);
+    setLastY(clientY);
   };
 
   const handleClear = () => {
@@ -205,11 +210,16 @@ const CanvasDrawing = ({
     }
   };
 
-  const draw = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = (
+    event:
+      | React.MouseEvent<HTMLCanvasElement>
+      | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     if (!isDrawing) return;
 
-    const x = event.nativeEvent.offsetX;
-    const y = event.nativeEvent.offsetY;
+    const { clientX, clientY } = event.touches ? event.touches[0] : event;
+    const x = clientX;
+    const y = clientY;
 
     if (ctx) {
       ctx.lineJoin = "round";
@@ -255,6 +265,9 @@ const CanvasDrawing = ({
         onMouseMove={draw}
         onMouseUp={stopDrawing}
         onMouseOut={stopDrawing}
+        onTouchStart={startDrawing}
+        onTouchMove={draw}
+        onTouchEnd={stopDrawing}
         className="border border-black"
       />
       <select
